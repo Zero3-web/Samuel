@@ -139,8 +139,6 @@
             display: flex;
             gap: 20px;
             margin-bottom: 2px;
-            max-width: 100%;
-            overflow: hidden;
         }
 
         .line.centered {
@@ -164,7 +162,7 @@
         .code {
             white-space: pre;
             color: var(--text-color);
-            overflow: hidden; /* Prevent code from spilling out accidentally */
+            word-break: break-all; /* Backup for very long words */
         }
 
         /* Syntax Highlighting */
@@ -227,10 +225,14 @@
             .content {
                 font-size: 11px;
                 padding: 15px;
+                padding-bottom: 120px; /* Space for button */
             }
             .line-number {
                 width: 20px;
                 font-size: 10px;
+            }
+            .code {
+                white-space: pre-wrap; /* Wrap long lines on mobile */
             }
             button#celebrate-btn {
                 bottom: 30px;
