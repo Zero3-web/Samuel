@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Feliz Cumpleaños! 🎂</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --editor-bg: #161b22;
+            --title-bg: #21262d;
+            --text-color: #c9d1d9;
+            --keyword: #ff7b72;
+            --function: #d2a8ff;
+            --string: #a5d6ff;
+            --comment: #8b949e;
+            --number: #79c0ff;
+            --accent: #58a6ff;
+            --cake-color: #f2ce76;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #05070a;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-image: radial-gradient(circle at 50% 50%, #1a1f2c 0%, #05070a 100%);
+        }
+
+        #background-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.4;
+            filter: blur(5px);
+            z-index: -1;
+        }
+
+        .window {
+            width: 100%;
+            max-width: 600px;
+            background: var(--editor-bg);
+            border-radius: 12px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1);
+            overflow: hidden;
+            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .title-bar {
+            background: var(--title-bg);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            user-select: none;
+        }
+
+        .dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot.red { background: #ff5f56; }
+        .dot.yellow { background: #ffbd2e; }
+        .dot.green { background: #27c93f; }
+
+        .title {
+            color: #8b949e;
+            font-size: 13px;
+            flex-grow: 1;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .content {
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-color);
+            position: relative;
+            min-height: 500px;
+        }
+
+        .line {
+            display: flex;
+            gap: 20px;
+        }
+
+        .line-number {
+            color: #484f58;
+            text-align: right;
+            width: 25px;
+            user-select: none;
+        }
+
+        .code {
+            white-space: pre;
+            color: var(--text-color);
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 1.2em;
+            background: var(--accent);
+            vertical-align: middle;
+            margin-left: 2px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Syntax Highlighting */
+        .kwd { color: var(--keyword); }
+        .fn { color: var(--function); }
+        .str { color: var(--string); }
+        .cmt { color: var(--comment); }
+        .num { color: var(--number); }
+        .cake { color: var(--cake-color); text-shadow: 0 0 10px rgba(242, 206, 118, 0.3); }
+
+        .highlight-line {
+            background: rgba(88, 166, 255, 0.1);
+            position: absolute;
+            left: 0;
+            right: 0;
+            pointer-events: none;
+            display: none;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, transparent 0%, rgba(0,0,0,0.2) 100%);
+            pointer-events: none;
+        }
+
+        button#celebrate-btn {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            padding: 12px 24px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(88, 166, 255, 0.3);
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        button#celebrate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px rgba(88, 166, 255, 0.4);
+            filter: brightness(1.1);
+        }
+
+        button#celebrate-btn:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <img id="background-image" src="" alt="Background">
+    
+    <div class="window">
+        <div class="title-bar">
+            <div class="dots">
+                <div class="dot red"></div>
+                <div class="dot yellow"></div>
+                <div class="dot green"></div>
+            </div>
+            <div class="title">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12,2L4.5,20.29L5.21,21L12,18L18.79,21L19.5,20.29L12,2Z"/>
+                </svg>
+                birthday_card.py
+            </div>
+        </div>
+        <div class="content" id="editor-content">
+            <!-- Lines will be injected here -->
+        </div>
+        <button id="celebrate-btn">Run celebrate_babette()</button>
+        <div class="overlay"></div>
+    </div>
+
+    <script>
+        const backgroundUrl = "./dark_developer_workspace_background.png"; // Placeholder path
+        document.getElementById('background-image').src = backgroundUrl;
+
+        const codeLines = [
+            { text: "************************************************", type: "cmt" },
+            { text: " ", type: "plain" },
+            { text: "   ****  HAPPY BIRTHDAY  ***   ", type: "fn" },
+            { text: "          🎉 BABETTE 🎉         ", type: "fn" },
+            { text: " ", type: "plain" },
+            { text: "               0   0           ", type: "cake" },
+            { text: "               |   |           ", type: "cake" },
+            { text: "            ___|___|___        ", type: "cake" },
+            { text: "        0  |~ ~ ~ ~ ~ ~|  0    ", type: "cake" },
+            { text: "        |  |           |  |    ", type: "cake" },
+            { text: "     ___|__|___________|__|___ ", type: "cake" },
+            { text: "    |/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/|", type: "cake" },
+            { text: " 0  |      H a p p y          |  0", type: "cake" },
+            { text: " |  |/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/|  |", type: "cake" },
+            { text: " |__|_________________________|__|", type: "cake" },
+            { text: "|/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/|", type: "cake" },
+            { text: "|                                |", type: "cake" },
+            { text: "|        B i r t h d a y ! ! !   |", type: "cake" },
+            { text: "| ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~|", type: "cake" },
+            { text: "|________________________________|", type: "cake" },
+            { text: " ", type: "plain" },
+            { text: " ", type: "plain" },
+            { text: "************************************************", type: "cmt" },
+            { text: " ", type: "plain" },
+            { text: "def celebrate_babette():", type: "kwd_fn" },
+            { text: "    \"\"\"Always active!\"\"\"", type: "cmt" },
+            { text: "    date = \"Lunes, 24 de Noviembre 2025\"", type: "var_str" },
+            { text: "    sports_mode = True", type: "var_bool" },
+            { text: "    ", type: "plain" },
+            { text: "    return \"¡Te deseo un día increíble!\"", type: "ret_str" }
+        ];
+
+        const editor = document.getElementById('editor-content');
+        const btn = document.getElementById('celebrate-btn');
+
+        async function typeCode() {
+            for (let i = 0; i < codeLines.length; i++) {
+                const lineData = codeLines[i];
+                const lineDiv = document.createElement('div');
+                lineDiv.className = 'line';
+                
+                const numSpan = document.createElement('span');
+                numSpan.className = 'line-number';
+                numSpan.textContent = i + 1;
+                
+                const codeSpan = document.createElement('span');
+                codeSpan.className = 'code ' + lineData.type;
+                
+                lineDiv.appendChild(numSpan);
+                lineDiv.appendChild(codeSpan);
+                editor.appendChild(lineDiv);
+
+                // Typing effect
+                const text = lineData.text;
+                for (let j = 0; j < text.length; j++) {
+                    codeSpan.textContent += text[j];
+                    editor.scrollTop = editor.scrollHeight;
+                    await new Promise(r => setTimeout(r, Math.random() * 20 + 10));
+                }
+                
+                // Add keyword highlighting for the function lines
+                if (lineData.type === 'kwd_fn') {
+                    codeSpan.innerHTML = codeSpan.innerHTML.replace('def', '<span class="kwd">def</span>')
+                                                            .replace('celebrate_babette', '<span class="fn">celebrate_babette</span>');
+                } else if (lineData.type === 'var_str') {
+                    codeSpan.innerHTML = codeSpan.innerHTML.replace('date', '<span class="var">date</span>')
+                                                            .replace(/".*"/, match => `<span class="str">${match}</span>`);
+                } else if (lineData.type === 'var_bool') {
+                    codeSpan.innerHTML = codeSpan.innerHTML.replace('sports_mode', '<span class="var">sports_mode</span>')
+                                                            .replace('True', '<span class="num">True</span>');
+                } else if (lineData.type === 'ret_str') {
+                    codeSpan.innerHTML = codeSpan.innerHTML.replace('return', '<span class="kwd">return</span>')
+                                                            .replace(/".*"/, match => `<span class="str">${match}</span>`);
+                }
+
+                await new Promise(r => setTimeout(r, 50));
+            }
+
+            btn.style.display = 'block';
+            btn.style.animation = 'slideUp 0.5s ease forwards';
+        }
+
+        btn.addEventListener('click', () => {
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#ff7b72', '#d2a8ff', '#a5d6ff', '#f2ce76']
+            });
+
+            // Second wave
+            setTimeout(() => {
+                confetti({
+                    particleCount: 100,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#ff7b72', '#d2a8ff']
+                });
+                confetti({
+                    particleCount: 100,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#a5d6ff', '#f2ce76']
+                });
+            }, 500);
+        });
+
+        window.onload = typeCode;
+    </script>
+</body>
+</html>
