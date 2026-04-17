@@ -37,52 +37,61 @@
             font-family: 'Inter', sans-serif;
             background: #05070a;
             min-height: 100vh;
+            width: 100vw;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            overflow-x: hidden;
+            overflow: hidden;
             background-image: radial-gradient(circle at 50% 50%, #1a1f2c 0%, #05070a 100%);
-            padding: 20px;
+            padding: 0;
+            position: fixed; /* Extra precaution for mobile scroll jumps */
+        }
+
+        html {
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
         }
 
         #background-image {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             object-fit: cover;
-            opacity: 0.4;
-            filter: blur(5px);
+            opacity: 0.2;
+            filter: blur(10px);
             z-index: -1;
         }
 
         .window {
-            width: 100%;
-            max-width: 800px;
+            width: 100vw;
+            height: 100vh;
             background: var(--editor-bg);
-            border-radius: 12px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1);
+            box-shadow: none;
             overflow: hidden;
-            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: fadeIn 1s ease-out;
             position: relative;
             z-index: 5;
-            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
         }
 
-        @keyframes slideUp {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .title-bar {
             background: var(--title-bg);
-            padding: 10px 16px;
+            padding: 12px 20px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
             user-select: none;
+            flex-shrink: 0;
         }
 
         .dots {
@@ -91,8 +100,8 @@
         }
 
         .dot {
-            width: 10px;
-            height: 10px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
         }
 
@@ -102,45 +111,60 @@
 
         .title {
             color: #8b949e;
-            font-size: 11px;
+            font-size: 13px;
             flex-grow: 1;
             text-align: center;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            letter-spacing: 0.5px;
-            text-transform: lowercase;
+            gap: 8px;
+            letter-spacing: 0.8px;
+            font-family: 'JetBrains Mono', monospace;
         }
 
         .content {
-            padding: 15px;
+            padding: 30px;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
-            line-height: 1.5;
+            font-size: 14px;
+            line-height: 1.6;
             color: var(--text-color);
             position: relative;
-            min-height: 550px;
-            overflow-x: auto;
+            flex-grow: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
         .line {
             display: flex;
-            gap: 15px;
-            min-width: fit-content;
+            gap: 20px;
+            margin-bottom: 2px;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        .line.centered {
+            justify-content: center;
+            text-align: center;
+        }
+
+        .line.centered .line-number {
+            display: none;
         }
 
         .line-number {
             color: #484f58;
             text-align: right;
-            width: 20px;
+            width: 30px;
             user-select: none;
             flex-shrink: 0;
+            font-size: 12px;
         }
 
         .code {
             white-space: pre;
             color: var(--text-color);
+            overflow: hidden; /* Prevent code from spilling out accidentally */
         }
 
         /* Syntax Highlighting */
@@ -150,7 +174,7 @@
         .cmt { color: var(--comment); }
         .num { color: var(--number); }
         .var { color: var(--text-color); }
-        .cake { color: var(--cake-color); text-shadow: 0 0 15px rgba(242, 206, 118, 0.6); }
+        .cake { color: var(--cake-color); text-shadow: 0 0 15px rgba(242, 206, 118, 0.4); }
 
         .overlay {
             position: absolute;
@@ -158,61 +182,66 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 50% 50%, transparent 20%, rgba(0,0,0,0.1) 100%);
+            background: linear-gradient(to bottom, transparent 80%, rgba(22, 27, 34, 0.8) 100%);
             pointer-events: none;
+            z-index: 6;
         }
 
         button#celebrate-btn {
-            padding: 12px 30px;
-            background: transparent;
-            color: var(--accent);
-            border: 1px solid rgba(88, 166, 255, 0.3);
-            border-radius: 30px;
+            position: fixed;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            padding: 14px 45px;
+            background: white;
+            color: #05070a;
+            border: none;
+            border-radius: 50px;
             font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            font-weight: 500;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
             opacity: 0;
-            transform: translateY(10px);
             display: none;
-            z-index: 10;
+            z-index: 100;
+            box-shadow: 0 10px 40px rgba(255, 255, 255, 0.2);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
 
         button#celebrate-btn.visible {
             display: block;
             opacity: 1;
-            transform: translateY(0);
+            transform: translateX(-50%) translateY(0);
         }
 
         button#celebrate-btn:hover {
-            background: rgba(88, 166, 255, 0.1);
-            border-color: var(--accent);
-            box-shadow: 0 0 20px rgba(88, 166, 255, 0.2);
-            letter-spacing: 1px;
+            transform: translateX(-50%) scale(1.05);
+            box-shadow: 0 15px 50px rgba(255, 255, 255, 0.4);
+            letter-spacing: 2px;
         }
 
         /* Responsive Improvements */
         @media (max-width: 600px) {
-            body { padding: 10px; }
-            #background-image { display: none; }
-            .window { 
-                max-width: 100%; 
-                border-radius: 8px;
-                box-shadow: 0 15px 30px rgba(0,0,0,0.4);
-                margin-bottom: 20px;
-            }
             .content {
-                font-size: 10px;
-                padding: 10px;
-                min-height: 480px;
+                font-size: 11px;
+                padding: 15px;
             }
             .line-number {
-                width: 15px;
+                width: 20px;
+                font-size: 10px;
             }
             button#celebrate-btn {
-                padding: 10px 20px;
-                font-size: 12px;
+                bottom: 30px;
+                padding: 12px 30px;
+                font-size: 13px;
+                width: 80%;
+                max-width: 250px;
+                text-align: center;
+            }
+            .title {
+                font-size: 11px;
             }
         }
 
@@ -223,67 +252,74 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(5, 7, 10, 1);
+            background: #05070a;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 1000;
-            transition: opacity 0.8s ease;
+            transition: opacity 1s ease;
         }
 
         .start-btn {
-            padding: 18px 45px;
-            font-size: 20px;
-            background: var(--accent);
-            color: white;
+            padding: 18px 50px;
+            font-size: 16px;
+            background: white;
+            color: #05070a;
             border: none;
             border-radius: 50px;
             cursor: pointer;
             font-family: 'Inter', sans-serif;
             font-weight: 600;
-            box-shadow: 0 0 40px rgba(88, 166, 255, 0.3);
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 10px 40px rgba(255, 255, 255, 0.1);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .start-btn:hover {
-            transform: scale(1.08) translateY(-3px);
-            box-shadow: 0 10px 60px rgba(88, 166, 255, 0.5);
+            transform: scale(1.05);
+            box-shadow: 0 15px 60px rgba(255, 255, 255, 0.3);
+            letter-spacing: 2px;
         }
 
         .start-msg {
-            color: #8b949e;
-            margin-bottom: 30px;
-            font-size: 16px;
+            color: white;
+            margin-bottom: 40px;
+            font-size: 22px;
             text-align: center;
             max-width: 80%;
+            font-weight: 300;
+            letter-spacing: 2px;
+            font-family: 'Inter', sans-serif;
         }
 
         /* Sparkle CSS */
         .sparkle {
             position: absolute;
-            width: 4px;
-            height: 4px;
+            width: 3px;
+            height: 3px;
             background: white;
             border-radius: 50%;
             pointer-events: none;
-            box-shadow: 0 0 10px 2px white;
+            box-shadow: 0 0 10px 1px white;
             animation: sparkle-anim linear forwards;
-            z-index: 6;
+            z-index: 10;
+            opacity: 0.6;
         }
 
         @keyframes sparkle-anim {
             0% { transform: scale(0) rotate(0deg); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: scale(1.5) rotate(180deg); opacity: 0; }
+            30% { opacity: 1; }
+            100% { transform: scale(1.8) rotate(180deg); opacity: 0; }
         }
     </style>
 </head>
 
 <body>
     <div id="start-overlay">
-        <p class="start-msg">He preparado algo especial para Samuel...</p>
-        <button class="start-btn" id="start-btn">¡Comenzar!</button>
+        <p class="start-msg">Tengo algo para ti, Samuel</p>
+        <button class="start-btn" id="start-btn">Ver</button>
     </div>
 
     <audio id="bg-music" src="./music.mp3" loop></audio>
@@ -298,10 +334,10 @@
                 <div class="dot green"></div>
             </div>
             <div class="title">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12,2L4.5,20.29L5.21,21L12,18L18.79,21L19.5,20.29L12,2Z" />
                 </svg>
-                birthday_card.py
+                samuel_birthday.py — Visual Studio Code
             </div>
         </div>
         <div class="content" id="editor-content">
@@ -309,7 +345,7 @@
         </div>
         <div class="overlay"></div>
     </div>
-    <button id="celebrate-btn">Run celebrate_samuel()</button>
+    <button id="celebrate-btn">Celebrar</button>
 
     <script>
         const editor = document.getElementById('editor-content');
@@ -320,10 +356,10 @@
         const popSound = document.getElementById('confetti-sound');
 
         const codeLines = [
-            { text: "************************************************", type: "cmt" },
+            { text: "################################################", type: "cmt" },
             { text: " ", type: "plain" },
-            { text: "   ****  HAPPY BIRTHDAY  ***   ", type: "fn" },
-            { text: "          🎉 SAMUEL 🎉         ", type: "fn" },
+            { text: "   ****  HAPPY BIRTHDAY  ****   ", type: "fn" },
+            { text: "          🚀 SAMUEL 🚀         ", type: "fn" },
             { text: " ", type: "plain" },
             { text: "               0   0           ", type: "cake" },
             { text: "               |   |           ", type: "cake" },
@@ -342,44 +378,50 @@
             { text: "|________________________________|", type: "cake" },
             { text: " ", type: "plain" },
             { text: " ", type: "plain" },
-            { text: "************************************************", type: "cmt" },
+            { text: "################################################", type: "cmt" },
             { text: " ", type: "plain" },
             { text: "def celebrate_samuel():", type: "kwd_fn" },
-            { text: "    \"\"\"¡Felicidades Samuel!\"\"\"", type: "cmt" },
+            { text: "    \"\"\"¡Felicidades Samuel por tu día especial!\"\"\"", type: "cmt" },
             { text: "    date = \"Viernes, 17 de Abril 2026\"", type: "var_str" },
             { text: "    sports_mode = True", type: "var_bool" },
+            { text: "    status = \"Celebrando...\"", type: "var_str" },
             { text: "    ", type: "plain" },
-            { text: "    return \"¡Te deseo un día increíble!\"", type: "ret_str" }
+            { text: "    return \"¡Que tengas un año lleno de código y éxito!\"", type: "ret_str" }
         ];
 
         function createSparkle() {
             const sparkle = document.createElement('div');
             sparkle.className = 'sparkle';
-            const size = Math.random() * 5 + 2;
+            const size = Math.random() * 6 + 2;
             sparkle.style.width = size + 'px';
             sparkle.style.height = size + 'px';
             sparkle.style.left = Math.random() * 100 + '%';
             sparkle.style.top = Math.random() * 100 + '%';
-            sparkle.style.animationDuration = (Math.random() * 1.5 + 0.5) + 's';
+            sparkle.style.animationDuration = (Math.random() * 2 + 1) + 's';
             
             document.body.appendChild(sparkle);
-            setTimeout(() => sparkle.remove(), 2000);
+            setTimeout(() => sparkle.remove(), 3000);
         }
 
         async function typeCode() {
-            setInterval(createSparkle, 150); // Start background sparkles
+            setInterval(createSparkle, 400); // Much less frequent sparkles
 
             for (let i = 0; i < codeLines.length; i++) {
                 const lineData = codeLines[i];
                 const lineDiv = document.createElement('div');
                 lineDiv.className = 'line';
+                
+                // Centering logic for cake and summary
+                if (lineData.type === 'cake' || lineData.type === 'fn') {
+                    lineDiv.classList.add('centered');
+                }
 
                 const numSpan = document.createElement('span');
                 numSpan.className = 'line-number';
                 numSpan.textContent = i + 1;
 
                 const codeSpan = document.createElement('span');
-                codeSpan.className = 'code ' + lineData.type;
+                codeSpan.className = 'code ' + (lineData.type || 'plain');
 
                 lineDiv.appendChild(numSpan);
                 lineDiv.appendChild(codeSpan);
@@ -389,8 +431,7 @@
                 for (let j = 0; j < text.length; j++) {
                     codeSpan.textContent += text[j];
                     editor.scrollTop = editor.scrollHeight;
-                    // Natural typing speed restored
-                    await new Promise(r => setTimeout(r, Math.random() * 25 + 15));
+                    await new Promise(r => setTimeout(r, Math.random() * 20 + 10));
                 }
 
                 // Syntax Highlighting
@@ -398,7 +439,7 @@
                     codeSpan.innerHTML = codeSpan.innerHTML.replace('def', '<span class="kwd">def</span>')
                         .replace('celebrate_samuel', '<span class="fn">celebrate_samuel</span>');
                 } else if (lineData.type === 'var_str') {
-                    codeSpan.innerHTML = codeSpan.innerHTML.replace('date', '<span class="var">date</span>')
+                    codeSpan.innerHTML = codeSpan.innerHTML.replace(/(date|status)/, '<span class="var">$1</span>')
                         .replace(/"(.*)"/, (match, p1) => `<span class="str">"${p1}"</span>`);
                 } else if (lineData.type === 'var_bool') {
                     codeSpan.innerHTML = codeSpan.innerHTML.replace('sports_mode', '<span class="var">sports_mode</span>')
@@ -408,48 +449,36 @@
                         .replace(/"(.*)"/, (match, p1) => `<span class="str">"${p1}"</span>`);
                 }
 
-                await new Promise(r => setTimeout(r, 60)); // Natural line delay
+                await new Promise(r => setTimeout(r, 80));
             }
 
             btn.classList.add('visible');
         }
 
         btn.addEventListener('click', () => {
-            // Play pop sound
             popSound.currentTime = 0;
             popSound.play();
 
             confetti({
-                particleCount: 180,
-                spread: 80,
-                origin: { y: 0.8 },
+                particleCount: 200,
+                spread: 90,
+                origin: { y: 0.9 },
                 colors: ['#ff7b72', '#d2a8ff', '#a5d6ff', '#f2ce76', '#ffffff']
             });
 
-            // Sparkle burst
-            for(let i=0; i<30; i++) setTimeout(createSparkle, i*50);
+            for(let i=0; i<40; i++) setTimeout(createSparkle, i*30);
 
             setTimeout(() => {
-                confetti({
-                    particleCount: 120,
-                    angle: 60,
-                    spread: 60,
-                    origin: { x: 0 },
-                });
-                confetti({
-                    particleCount: 120,
-                    angle: 120,
-                    spread: 60,
-                    origin: { x: 1 },
-                });
-            }, 400);
+                confetti({ particleCount: 150, angle: 60, spread: 70, origin: { x: 0, y: 0.9 } });
+                confetti({ particleCount: 150, angle: 120, spread: 70, origin: { x: 1, y: 0.9 } });
+            }, 300);
         });
 
         startBtn.addEventListener('click', () => {
             startOverlay.style.opacity = '0';
             setTimeout(() => {
                 startOverlay.style.display = 'none';
-            }, 800);
+            }, 1000);
             
             music.play();
             typeCode();
