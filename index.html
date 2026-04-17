@@ -38,6 +38,7 @@
             background: #05070a;
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             overflow-x: hidden;
@@ -67,6 +68,7 @@
             animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
             z-index: 5;
+            margin-bottom: 30px;
         }
 
         @keyframes slideUp {
@@ -161,28 +163,33 @@
         }
 
         button#celebrate-btn {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            padding: 12px 24px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 8px;
+            padding: 12px 30px;
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid rgba(88, 166, 255, 0.3);
+            border-radius: 30px;
             font-family: 'Inter', sans-serif;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
-            box-shadow: 0 8px 25px rgba(88, 166, 255, 0.4);
-            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            opacity: 0;
+            transform: translateY(10px);
             display: none;
             z-index: 10;
         }
 
+        button#celebrate-btn.visible {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         button#celebrate-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 30px rgba(88, 166, 255, 0.5);
-            filter: brightness(1.1);
+            background: rgba(88, 166, 255, 0.1);
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(88, 166, 255, 0.2);
+            letter-spacing: 1px;
         }
 
         /* Responsive Improvements */
@@ -193,19 +200,18 @@
                 max-width: 100%; 
                 border-radius: 8px;
                 box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+                margin-bottom: 20px;
             }
             .content {
                 font-size: 10px;
                 padding: 10px;
-                min-height: 420px;
+                min-height: 480px;
             }
             .line-number {
                 width: 15px;
             }
             button#celebrate-btn {
-                bottom: 15px;
-                right: 15px;
-                padding: 10px 18px;
+                padding: 10px 20px;
                 font-size: 12px;
             }
         }
@@ -281,6 +287,7 @@
     </div>
 
     <audio id="bg-music" src="./music.mp3" loop></audio>
+    <audio id="confetti-sound" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3"></audio>
     <img id="background-image" src="./dark_developer_workspace_background.png" alt="Background">
 
     <div class="window">
@@ -300,9 +307,9 @@
         <div class="content" id="editor-content">
             <!-- Lines will be injected here -->
         </div>
-        <button id="celebrate-btn">Run celebrate_samuel()</button>
         <div class="overlay"></div>
     </div>
+    <button id="celebrate-btn">Run celebrate_samuel()</button>
 
     <script>
         const editor = document.getElementById('editor-content');
@@ -310,6 +317,7 @@
         const startOverlay = document.getElementById('start-overlay');
         const startBtn = document.getElementById('start-btn');
         const music = document.getElementById('bg-music');
+        const popSound = document.getElementById('confetti-sound');
 
         const codeLines = [
             { text: "************************************************", type: "cmt" },
@@ -338,7 +346,7 @@
             { text: " ", type: "plain" },
             { text: "def celebrate_samuel():", type: "kwd_fn" },
             { text: "    \"\"\"¡Felicidades Samuel!\"\"\"", type: "cmt" },
-            { text: "    date = \"Lunes, 24 de Noviembre 2025\"", type: "var_str" },
+            { text: "    date = \"Viernes, 17 de Abril 2026\"", type: "var_str" },
             { text: "    sports_mode = True", type: "var_bool" },
             { text: "    ", type: "plain" },
             { text: "    return \"¡Te deseo un día increíble!\"", type: "ret_str" }
@@ -403,15 +411,18 @@
                 await new Promise(r => setTimeout(r, 60)); // Natural line delay
             }
 
-            btn.style.display = 'block';
-            btn.style.animation = 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+            btn.classList.add('visible');
         }
 
         btn.addEventListener('click', () => {
+            // Play pop sound
+            popSound.currentTime = 0;
+            popSound.play();
+
             confetti({
                 particleCount: 180,
                 spread: 80,
-                origin: { y: 0.6 },
+                origin: { y: 0.8 },
                 colors: ['#ff7b72', '#d2a8ff', '#a5d6ff', '#f2ce76', '#ffffff']
             });
 
