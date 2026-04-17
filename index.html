@@ -162,7 +162,7 @@
         .code {
             white-space: pre;
             color: var(--text-color);
-            word-break: break-all; /* Backup for very long words */
+            word-break: break-all;
         }
 
         /* Syntax Highlighting */
@@ -172,7 +172,12 @@
         .cmt { color: var(--comment); }
         .num { color: var(--number); }
         .var { color: var(--text-color); }
-        .cake { color: var(--cake-color); text-shadow: 0 0 15px rgba(242, 206, 118, 0.4); }
+        
+        /* Premium Cake Colors */
+        .cake_candle { color: #ff7b72; text-shadow: 0 0 10px rgba(255, 123, 114, 0.5); }
+        .cake_frosting { color: #d2a8ff; text-shadow: 0 0 10px rgba(210, 168, 255, 0.5); }
+        .cake_base { color: #f2ce76; text-shadow: 0 0 15px rgba(242, 206, 118, 0.4); }
+        .cake_text { color: #ffffff; font-weight: bold; text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
 
         .overlay {
             position: absolute;
@@ -363,21 +368,21 @@
             { text: "   ****  HAPPY BIRTHDAY  ****   ", type: "fn" },
             { text: "          🚀 SAMUEL 🚀         ", type: "fn" },
             { text: " ", type: "plain" },
-            { text: "               0   0           ", type: "cake" },
-            { text: "               |   |           ", type: "cake" },
-            { text: "            ___|___|___        ", type: "cake" },
-            { text: "        0  |~ ~ ~ ~ ~ ~|  0    ", type: "cake" },
-            { text: "        |  |           |  |    ", type: "cake" },
-            { text: "     ___|__|___________|__|___ ", type: "cake" },
-            { text: "    |/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/|", type: "cake" },
-            { text: " 0  |      H a p p y          |  0", type: "cake" },
-            { text: " |  |/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/|  |", type: "cake" },
-            { text: " |__|_________________________|__|", type: "cake" },
-            { text: "|/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/|", type: "cake" },
-            { text: "|                                |", type: "cake" },
-            { text: "|        B i r t h d a y ! ! !   |", type: "cake" },
-            { text: "| ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~|", type: "cake" },
-            { text: "|________________________________|", type: "cake" },
+            { text: "               0   0           ", type: "cake_candle" },
+            { text: "               |   |           ", type: "cake_candle" },
+            { text: "            ___|___|___        ", type: "cake_frosting" },
+            { text: "        0  |~ ~ ~ ~ ~ ~|  0    ", type: "cake_frosting" },
+            { text: "        |  |           |  |    ", type: "cake_frosting" },
+            { text: "     ___|__|___________|__|___ ", type: "cake_frosting" },
+            { text: "    |/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/|", type: "cake_base" },
+            { text: " 0  |      H a p p y          |  0", type: "cake_text" },
+            { text: " |  |/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/|  |", type: "cake_base" },
+            { text: " |__|_________________________|__|", type: "cake_base" },
+            { text: "|/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/|", type: "cake_base" },
+            { text: "|                                |", type: "cake_base" },
+            { text: "|        B i r t h d a y ! ! !   |", type: "cake_text" },
+            { text: "| ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~|", type: "cake_frosting" },
+            { text: "|________________________________|", type: "cake_base" },
             { text: " ", type: "plain" },
             { text: " ", type: "plain" },
             { text: "################################################", type: "cmt" },
@@ -414,7 +419,7 @@
                 lineDiv.className = 'line';
                 
                 // Centering logic for cake and summary
-                if (lineData.type === 'cake' || lineData.type === 'fn') {
+                if (lineData.type && (lineData.type.startsWith('cake') || lineData.type === 'fn')) {
                     lineDiv.classList.add('centered');
                 }
 
