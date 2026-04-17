@@ -231,10 +231,57 @@
                 font-size: 11px;
             }
         }
+
+        /* Start Overlay */
+        #start-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 7, 10, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
+        }
+
+        .start-btn {
+            padding: 20px 40px;
+            font-size: 18px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            box-shadow: 0 0 30px rgba(88, 166, 255, 0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .start-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 50px rgba(88, 166, 255, 0.6);
+        }
+
+        .start-msg {
+            color: #8b949e;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
     </style>
 </head>
 
 <body>
+    <div id="start-overlay">
+        <p class="start-msg">He preparado algo especial para ti...</p>
+        <button class="start-btn" id="start-btn">Comenzar</button>
+    </div>
+
+    <audio id="bg-music" src="./music.mp3" loop></audio>
     <img id="background-image" src="" alt="Background">
 
     <div class="window">
@@ -297,6 +344,9 @@
 
         const editor = document.getElementById('editor-content');
         const btn = document.getElementById('celebrate-btn');
+        const startOverlay = document.getElementById('start-overlay');
+        const startBtn = document.getElementById('start-btn');
+        const music = document.getElementById('bg-music');
 
         async function typeCode() {
             for (let i = 0; i < codeLines.length; i++) {
@@ -371,7 +421,15 @@
             }, 400);
         });
 
-        window.onload = typeCode;
+        startBtn.addEventListener('click', () => {
+            startOverlay.style.opacity = '0';
+            setTimeout(() => {
+                startOverlay.style.display = 'none';
+            }, 500);
+            
+            music.play();
+            typeCode();
+        });
     </script>
 </body>
 
