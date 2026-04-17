@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>¡Feliz Cumpleaños! 🎂</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
@@ -32,12 +35,13 @@
         body {
             font-family: 'Inter', sans-serif;
             background: #05070a;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            overflow-x: hidden;
             background-image: radial-gradient(circle at 50% 50%, #1a1f2c 0%, #05070a 100%);
+            padding: 20px;
         }
 
         #background-image {
@@ -54,7 +58,7 @@
 
         .window {
             width: 100%;
-            max-width: 600px;
+            max-width: 700px;
             background: var(--editor-bg);
             border-radius: 12px;
             box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1);
@@ -70,7 +74,7 @@
 
         .title-bar {
             background: var(--title-bg);
-            padding: 12px 16px;
+            padding: 10px 16px;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -83,8 +87,8 @@
         }
 
         .dot {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
         }
 
@@ -94,35 +98,40 @@
 
         .title {
             color: #8b949e;
-            font-size: 13px;
+            font-size: 11px;
             flex-grow: 1;
             text-align: center;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 6px;
+            letter-spacing: 0.5px;
+            text-transform: lowercase;
         }
 
         .content {
-            padding: 20px;
+            padding: 15px;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 14px;
-            line-height: 1.6;
+            font-size: 13px;
+            line-height: 1.5;
             color: var(--text-color);
             position: relative;
-            min-height: 500px;
+            min-height: 480px;
+            overflow-x: auto;
         }
 
         .line {
             display: flex;
-            gap: 20px;
+            gap: 15px;
+            min-width: fit-content;
         }
 
         .line-number {
             color: #484f58;
             text-align: right;
-            width: 25px;
+            width: 20px;
             user-select: none;
+            flex-shrink: 0;
         }
 
         .code {
@@ -132,11 +141,11 @@
 
         .cursor {
             display: inline-block;
-            width: 8px;
-            height: 1.2em;
+            width: 7px;
+            height: 1.1em;
             background: var(--accent);
             vertical-align: middle;
-            margin-left: 2px;
+            margin-left: 1px;
             animation: blink 1s infinite;
         }
 
@@ -151,7 +160,8 @@
         .str { color: var(--string); }
         .cmt { color: var(--comment); }
         .num { color: var(--number); }
-        .cake { color: var(--cake-color); text-shadow: 0 0 10px rgba(242, 206, 118, 0.3); }
+        .var { color: var(--text-color); }
+        .cake { color: var(--cake-color); text-shadow: 0 0 10px rgba(242, 206, 118, 0.4); }
 
         .highlight-line {
             background: rgba(88, 166, 255, 0.1);
@@ -168,41 +178,65 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 50% 50%, transparent 0%, rgba(0,0,0,0.2) 100%);
+            background: radial-gradient(circle at 50% 50%, transparent 20%, rgba(0,0,0,0.1) 100%);
             pointer-events: none;
         }
 
         button#celebrate-btn {
             position: absolute;
-            bottom: 30px;
-            right: 30px;
-            padding: 12px 24px;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
             background: var(--accent);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             font-family: 'Inter', sans-serif;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 10px 20px rgba(88, 166, 255, 0.3);
-            transition: all 0.3s ease;
+            box-shadow: 0 8px 16px rgba(88, 166, 255, 0.3);
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
             display: none;
+            z-index: 10;
         }
 
         button#celebrate-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 15px 25px rgba(88, 166, 255, 0.4);
+            box-shadow: 0 12px 20px rgba(88, 166, 255, 0.4);
             filter: brightness(1.1);
         }
 
         button#celebrate-btn:active {
             transform: translateY(0);
         }
+
+        /* Responsive Improvements */
+        @media (max-width: 600px) {
+            .content {
+                font-size: 11px;
+                padding: 10px;
+                min-height: 400px;
+            }
+            .line-number {
+                width: 15px;
+            }
+            .title-bar {
+                padding: 8px 12px;
+            }
+            button#celebrate-btn {
+                bottom: 15px;
+                right: 15px;
+                padding: 8px 16px;
+                font-size: 11px;
+            }
+        }
     </style>
 </head>
+
 <body>
     <img id="background-image" src="" alt="Background">
-    
+
     <div class="window">
         <div class="title-bar">
             <div class="dots">
@@ -211,8 +245,8 @@
                 <div class="dot green"></div>
             </div>
             <div class="title">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12,2L4.5,20.29L5.21,21L12,18L18.79,21L19.5,20.29L12,2Z"/>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12,2L4.5,20.29L5.21,21L12,18L18.79,21L19.5,20.29L12,2Z" />
                 </svg>
                 birthday_card.py
             </div>
@@ -220,19 +254,19 @@
         <div class="content" id="editor-content">
             <!-- Lines will be injected here -->
         </div>
-        <button id="celebrate-btn">Run celebrate_babette()</button>
+        <button id="celebrate-btn">Run celebrate_samuel()</button>
         <div class="overlay"></div>
     </div>
 
     <script>
-        const backgroundUrl = "./dark_developer_workspace_background.png"; // Placeholder path
+        const backgroundUrl = "./dark_developer_workspace_background.png";
         document.getElementById('background-image').src = backgroundUrl;
 
         const codeLines = [
             { text: "************************************************", type: "cmt" },
             { text: " ", type: "plain" },
             { text: "   ****  HAPPY BIRTHDAY  ***   ", type: "fn" },
-            { text: "          🎉 BABETTE 🎉         ", type: "fn" },
+            { text: "          🎉 SAMUEL 🎉         ", type: "fn" },
             { text: " ", type: "plain" },
             { text: "               0   0           ", type: "cake" },
             { text: "               |   |           ", type: "cake" },
@@ -253,8 +287,8 @@
             { text: " ", type: "plain" },
             { text: "************************************************", type: "cmt" },
             { text: " ", type: "plain" },
-            { text: "def celebrate_babette():", type: "kwd_fn" },
-            { text: "    \"\"\"Always active!\"\"\"", type: "cmt" },
+            { text: "def celebrate_samuel():", type: "kwd_fn" },
+            { text: "    \"\"\"¡Felicidades Samuel!\"\"\"", type: "cmt" },
             { text: "    date = \"Lunes, 24 de Noviembre 2025\"", type: "var_str" },
             { text: "    sports_mode = True", type: "var_bool" },
             { text: "    ", type: "plain" },
@@ -269,46 +303,48 @@
                 const lineData = codeLines[i];
                 const lineDiv = document.createElement('div');
                 lineDiv.className = 'line';
-                
+
                 const numSpan = document.createElement('span');
                 numSpan.className = 'line-number';
                 numSpan.textContent = i + 1;
-                
+
                 const codeSpan = document.createElement('span');
                 codeSpan.className = 'code ' + lineData.type;
-                
+
                 lineDiv.appendChild(numSpan);
                 lineDiv.appendChild(codeSpan);
                 editor.appendChild(lineDiv);
 
-                // Typing effect
+                // Faster typing effect
                 const text = lineData.text;
                 for (let j = 0; j < text.length; j++) {
                     codeSpan.textContent += text[j];
-                    editor.scrollTop = editor.scrollHeight;
-                    await new Promise(r => setTimeout(r, Math.random() * 20 + 10));
-                }
-                
-                // Add keyword highlighting for the function lines
-                if (lineData.type === 'kwd_fn') {
-                    codeSpan.innerHTML = codeSpan.innerHTML.replace('def', '<span class="kwd">def</span>')
-                                                            .replace('celebrate_babette', '<span class="fn">celebrate_babette</span>');
-                } else if (lineData.type === 'var_str') {
-                    codeSpan.innerHTML = codeSpan.innerHTML.replace('date', '<span class="var">date</span>')
-                                                            .replace(/".*"/, match => `<span class="str">${match}</span>`);
-                } else if (lineData.type === 'var_bool') {
-                    codeSpan.innerHTML = codeSpan.innerHTML.replace('sports_mode', '<span class="var">sports_mode</span>')
-                                                            .replace('True', '<span class="num">True</span>');
-                } else if (lineData.type === 'ret_str') {
-                    codeSpan.innerHTML = codeSpan.innerHTML.replace('return', '<span class="kwd">return</span>')
-                                                            .replace(/".*"/, match => `<span class="str">${match}</span>`);
+                    if (j % 3 === 0) {
+                        editor.scrollTop = editor.scrollHeight;
+                    }
+                    await new Promise(r => setTimeout(r, 5));
                 }
 
-                await new Promise(r => setTimeout(r, 50));
+                // Syntax Highlighting
+                if (lineData.type === 'kwd_fn') {
+                    codeSpan.innerHTML = codeSpan.innerHTML.replace('def', '<span class="kwd">def</span>')
+                        .replace('celebrate_samuel', '<span class="fn">celebrate_samuel</span>');
+                } else if (lineData.type === 'var_str') {
+                    codeSpan.innerHTML = codeSpan.innerHTML.replace('date', '<span class="var">date</span>')
+                        .replace(/"(.*)"/, (match, p1) => `<span class="str">"${p1}"</span>`);
+                } else if (lineData.type === 'var_bool') {
+                    codeSpan.innerHTML = codeSpan.innerHTML.replace('sports_mode', '<span class="var">sports_mode</span>')
+                        .replace('True', '<span class="num">True</span>');
+                } else if (lineData.type === 'ret_str') {
+                    codeSpan.innerHTML = codeSpan.innerHTML.replace('return', '<span class="kwd">return</span>')
+                        .replace(/"(.*)"/, (match, p1) => `<span class="str">"${p1}"</span>`);
+                }
+
+                await new Promise(r => setTimeout(r, 10));
             }
 
             btn.style.display = 'block';
-            btn.style.animation = 'slideUp 0.5s ease forwards';
+            btn.style.animation = 'slideUp 0.4s ease forwards';
         }
 
         btn.addEventListener('click', () => {
@@ -319,26 +355,24 @@
                 colors: ['#ff7b72', '#d2a8ff', '#a5d6ff', '#f2ce76']
             });
 
-            // Second wave
             setTimeout(() => {
                 confetti({
                     particleCount: 100,
                     angle: 60,
                     spread: 55,
                     origin: { x: 0 },
-                    colors: ['#ff7b72', '#d2a8ff']
                 });
                 confetti({
                     particleCount: 100,
                     angle: 120,
                     spread: 55,
                     origin: { x: 1 },
-                    colors: ['#a5d6ff', '#f2ce76']
                 });
-            }, 500);
+            }, 400);
         });
 
         window.onload = typeCode;
     </script>
 </body>
+
 </html>
