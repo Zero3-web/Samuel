@@ -24,6 +24,7 @@
             --number: #79c0ff;
             --accent: #58a6ff;
             --cake-color: #f2ce76;
+            --sparkle: #fff;
         }
 
         * {
@@ -65,6 +66,7 @@
             overflow: hidden;
             animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
+            z-index: 5;
         }
 
         @keyframes slideUp {
@@ -139,21 +141,6 @@
             color: var(--text-color);
         }
 
-        .cursor {
-            display: inline-block;
-            width: 7px;
-            height: 1.1em;
-            background: var(--accent);
-            vertical-align: middle;
-            margin-left: 1px;
-            animation: blink 1s infinite;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
         /* Syntax Highlighting */
         .kwd { color: var(--keyword); }
         .fn { color: var(--function); }
@@ -161,16 +148,7 @@
         .cmt { color: var(--comment); }
         .num { color: var(--number); }
         .var { color: var(--text-color); }
-        .cake { color: var(--cake-color); text-shadow: 0 0 10px rgba(242, 206, 118, 0.4); }
-
-        .highlight-line {
-            background: rgba(88, 166, 255, 0.1);
-            position: absolute;
-            left: 0;
-            right: 0;
-            pointer-events: none;
-            display: none;
-        }
+        .cake { color: var(--cake-color); text-shadow: 0 0 15px rgba(242, 206, 118, 0.6); }
 
         .overlay {
             position: absolute;
@@ -186,16 +164,16 @@
             position: absolute;
             bottom: 20px;
             right: 20px;
-            padding: 10px 20px;
+            padding: 12px 24px;
             background: var(--accent);
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             font-family: 'Inter', sans-serif;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 8px 16px rgba(88, 166, 255, 0.3);
+            box-shadow: 0 8px 25px rgba(88, 166, 255, 0.4);
             transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
             display: none;
             z-index: 10;
@@ -203,32 +181,32 @@
 
         button#celebrate-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 20px rgba(88, 166, 255, 0.4);
+            box-shadow: 0 15px 30px rgba(88, 166, 255, 0.5);
             filter: brightness(1.1);
-        }
-
-        button#celebrate-btn:active {
-            transform: translateY(0);
         }
 
         /* Responsive Improvements */
         @media (max-width: 600px) {
+            body { padding: 10px; }
+            #background-image { display: none; }
+            .window { 
+                max-width: 100%; 
+                border-radius: 8px;
+                box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+            }
             .content {
-                font-size: 11px;
+                font-size: 10px;
                 padding: 10px;
-                min-height: 400px;
+                min-height: 420px;
             }
             .line-number {
                 width: 15px;
             }
-            .title-bar {
-                padding: 8px 12px;
-            }
             button#celebrate-btn {
                 bottom: 15px;
                 right: 15px;
-                padding: 8px 16px;
-                font-size: 11px;
+                padding: 10px 18px;
+                font-size: 12px;
             }
         }
 
@@ -239,18 +217,18 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(5, 7, 10, 0.95);
+            background: rgba(5, 7, 10, 1);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 1000;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.8s ease;
         }
 
         .start-btn {
-            padding: 20px 40px;
-            font-size: 18px;
+            padding: 18px 45px;
+            font-size: 20px;
             background: var(--accent);
             color: white;
             border: none;
@@ -258,31 +236,52 @@
             cursor: pointer;
             font-family: 'Inter', sans-serif;
             font-weight: 600;
-            box-shadow: 0 0 30px rgba(88, 166, 255, 0.4);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 40px rgba(88, 166, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         .start-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 50px rgba(88, 166, 255, 0.6);
+            transform: scale(1.08) translateY(-3px);
+            box-shadow: 0 10px 60px rgba(88, 166, 255, 0.5);
         }
 
         .start-msg {
             color: #8b949e;
-            margin-bottom: 20px;
-            font-size: 14px;
+            margin-bottom: 30px;
+            font-size: 16px;
+            text-align: center;
+            max-width: 80%;
+        }
+
+        /* Sparkle CSS */
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 10px 2px white;
+            animation: sparkle-anim linear forwards;
+            z-index: 6;
+        }
+
+        @keyframes sparkle-anim {
+            0% { transform: scale(0) rotate(0deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: scale(1.5) rotate(180deg); opacity: 0; }
         }
     </style>
 </head>
 
 <body>
     <div id="start-overlay">
-        <p class="start-msg">He preparado algo especial para ti...</p>
-        <button class="start-btn" id="start-btn">Comenzar</button>
+        <p class="start-msg">He preparado algo especial para Samuel...</p>
+        <button class="start-btn" id="start-btn">¡Comenzar!</button>
     </div>
 
     <audio id="bg-music" src="./music.mp3" loop></audio>
-    <img id="background-image" src="" alt="Background">
+    <img id="background-image" src="./dark_developer_workspace_background.png" alt="Background">
 
     <div class="window">
         <div class="title-bar">
@@ -306,8 +305,11 @@
     </div>
 
     <script>
-        const backgroundUrl = "./dark_developer_workspace_background.png";
-        document.getElementById('background-image').src = backgroundUrl;
+        const editor = document.getElementById('editor-content');
+        const btn = document.getElementById('celebrate-btn');
+        const startOverlay = document.getElementById('start-overlay');
+        const startBtn = document.getElementById('start-btn');
+        const music = document.getElementById('bg-music');
 
         const codeLines = [
             { text: "************************************************", type: "cmt" },
@@ -342,13 +344,23 @@
             { text: "    return \"¡Te deseo un día increíble!\"", type: "ret_str" }
         ];
 
-        const editor = document.getElementById('editor-content');
-        const btn = document.getElementById('celebrate-btn');
-        const startOverlay = document.getElementById('start-overlay');
-        const startBtn = document.getElementById('start-btn');
-        const music = document.getElementById('bg-music');
+        function createSparkle() {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            const size = Math.random() * 5 + 2;
+            sparkle.style.width = size + 'px';
+            sparkle.style.height = size + 'px';
+            sparkle.style.left = Math.random() * 100 + '%';
+            sparkle.style.top = Math.random() * 100 + '%';
+            sparkle.style.animationDuration = (Math.random() * 1.5 + 0.5) + 's';
+            
+            document.body.appendChild(sparkle);
+            setTimeout(() => sparkle.remove(), 2000);
+        }
 
         async function typeCode() {
+            setInterval(createSparkle, 150); // Start background sparkles
+
             for (let i = 0; i < codeLines.length; i++) {
                 const lineData = codeLines[i];
                 const lineDiv = document.createElement('div');
@@ -365,14 +377,12 @@
                 lineDiv.appendChild(codeSpan);
                 editor.appendChild(lineDiv);
 
-                // Faster typing effect
                 const text = lineData.text;
                 for (let j = 0; j < text.length; j++) {
                     codeSpan.textContent += text[j];
-                    if (j % 3 === 0) {
-                        editor.scrollTop = editor.scrollHeight;
-                    }
-                    await new Promise(r => setTimeout(r, 5));
+                    editor.scrollTop = editor.scrollHeight;
+                    // Natural typing speed restored
+                    await new Promise(r => setTimeout(r, Math.random() * 25 + 15));
                 }
 
                 // Syntax Highlighting
@@ -390,32 +400,35 @@
                         .replace(/"(.*)"/, (match, p1) => `<span class="str">"${p1}"</span>`);
                 }
 
-                await new Promise(r => setTimeout(r, 10));
+                await new Promise(r => setTimeout(r, 60)); // Natural line delay
             }
 
             btn.style.display = 'block';
-            btn.style.animation = 'slideUp 0.4s ease forwards';
+            btn.style.animation = 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards';
         }
 
         btn.addEventListener('click', () => {
             confetti({
-                particleCount: 150,
-                spread: 70,
+                particleCount: 180,
+                spread: 80,
                 origin: { y: 0.6 },
-                colors: ['#ff7b72', '#d2a8ff', '#a5d6ff', '#f2ce76']
+                colors: ['#ff7b72', '#d2a8ff', '#a5d6ff', '#f2ce76', '#ffffff']
             });
+
+            // Sparkle burst
+            for(let i=0; i<30; i++) setTimeout(createSparkle, i*50);
 
             setTimeout(() => {
                 confetti({
-                    particleCount: 100,
+                    particleCount: 120,
                     angle: 60,
-                    spread: 55,
+                    spread: 60,
                     origin: { x: 0 },
                 });
                 confetti({
-                    particleCount: 100,
+                    particleCount: 120,
                     angle: 120,
-                    spread: 55,
+                    spread: 60,
                     origin: { x: 1 },
                 });
             }, 400);
@@ -425,7 +438,7 @@
             startOverlay.style.opacity = '0';
             setTimeout(() => {
                 startOverlay.style.display = 'none';
-            }, 500);
+            }, 800);
             
             music.play();
             typeCode();
